@@ -1,0 +1,86 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content %}
+<h1 align="center">Notes</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Note</th>
+      <th>Image</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="notes">
+    {% for note in user.notes %}
+    <tr id="note-row-{{ note.id }}">
+      <td>
+        <span id="note-text-{{ note.id }}">{{ note.data }}</span>
+        <input type="text" id="note-input-{{ note.id }}" value="{{ note.data }}" class="form-control" style="display: none;" />
+      </td>
+      <td>
+        {% if note.image %}
+          <img src="{{ url_for('static', filename='uploads/' ~ note.image) }}" width="100">
+        {% else %}
+          No Image
+        {% endif %}
+      </td>
+      <td>{{ note.date }}</td>
+      <td>
+        <button class="btn btn-warning" onclick="editNote({{ note.id }})">Edit</button>
+        <button class="btn btn-success" onclick="saveNote({{ note.id }})" style="display: none;">Save</button>
+        <button class="btn btn-danger" onClick="deleteNote({{ note.id }})">Delete</button>
+        <button class="btn btn-primary" onclick="showEditForm({{ note.id }})">Edit Image</button>
+      </td>
+    </tr>
+
+    <!-- Edit Image Form (Placed inside loop) -->
+    <tr id="edit-form-{{ note.id }}" style="display: none;">
+      <td colspan="4">
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('views.edit_image', note_id=note.id) }}">
+          <input type="file" name="image" id="image-{{ note.id }}" accept="image/*" class="form-control">
+          <br/>
+          <button type="submit" class="btn btn-info">Update Image</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- New Note Form -->
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('views.home') }}">
+  <textarea name="note" id="note" class="form-control"></textarea>
+  <br />
+  <input type="file" name="image" id="image" accept="image/*" class="form-control">
+  <br/>
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Add Note</button>
+  </div>
+</form>
+
+<script>
+  function editNote(noteId) {
+    document.getElementById("note-text-" + noteId).style.display = "none";
+    document.getElementById("note-input-" + noteId).style.display = "inline-block";
+    document.querySelector(`#note-row-${noteId} .btn-warning`).style.display = "none";
+    document.querySelector(`#note-row-${noteId} .btn-success`).style.display = "inline-block";
+  }
+
+  function saveNote(noteId) {
+    let newNoteText = document.getElementById("note-input-" + noteId).value;
+    fetch("/update-note", {
+      method: "POST",
+      body: JSON.stringify({ noteId: noteId, noteText: newNoteText }),
+      headers: { "Content-Type": "application/json" }
+    }).then((_res) => {
+      location.reload();  // Reload to show updated data
+    });
+  }
+
+  function showEditForm(noteId) {
+    let editForm = document.getElementById("edit-form-" + noteId);
+    editForm.style.display = (editForm.style.display === "none") ? "table-row" : "none";
+  }
+</script>
+{% endblock %}
