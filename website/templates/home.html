@@ -67,16 +67,44 @@
     document.querySelector(`#note-row-${noteId} .btn-success`).style.display = "inline-block";
   }
 
-  function saveNote(noteId) {
+function saveNote(noteId) {
     let newNoteText = document.getElementById("note-input-" + noteId).value;
+    
     fetch("/update-note", {
-      method: "POST",
-      body: JSON.stringify({ noteId: noteId, noteText: newNoteText }),
-      headers: { "Content-Type": "application/json" }
-    }).then((_res) => {
-      location.reload();  // Reload to show updated data
-    });
-  }
+        method: "POST",
+        body: JSON.stringify({ id: noteId, text: newNoteText }), // Fix: Match Flask route parameters
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            location.reload();  // Reload to show updated data
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function deleteNote(noteId) {
+    fetch("/delete-note", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json"  // ✅ Ensure JSON content type
+        },
+        body: JSON.stringify({ noteId: noteId })  // ✅ Convert object to JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert("Error: " + data.error);
+        } else {
+            document.getElementById("note-row-" + noteId).remove();  // ✅ Remove deleted note from UI
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
 
   function showEditForm(noteId) {
     let editForm = document.getElementById("edit-form-" + noteId);

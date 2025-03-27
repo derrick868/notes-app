@@ -41,6 +41,59 @@ def edit_image(note_id):
 
     return redirect(url_for("views.home"))
 
+@views.route('/update-note', methods=['POST'])
+@login_required
+def update_note():
+    data = request.get_json()
+    note_id = data.get('id')
+    new_text = data.get('text')
+
+    if not note_id or not new_text:
+        return jsonify({'error': 'Missing note ID or text'}), 400
+
+    note = Note.query.get(note_id)
+
+    if not note:
+        return jsonify({'error': 'Note not found'}), 404
+
+    if note.user_id != current_user.id:
+        return jsonify({'error': "You don't have permission to edit this note"}), 403
+
+    # Update note text
+    note.data = new_text
+    db.session.commit()
+
+    return jsonify({'message': 'Note updated successfully'}), 200
+
+@views.route('/delete-note', methods=['POST'])
+@login_required
+def delete_note():
+    try:
+        data = request.get_json()  # ✅ Ensure JSON is parsed correctly
+        if not data:
+            return jsonify({'error': 'Invalid JSON data'}), 400
+
+        note_id = data.get('noteId')  # ✅ Match key in JS fetch()
+        if not note_id:
+            return jsonify({'error': 'Note ID missing'}), 400
+
+        note = Note.query.get(note_id)
+        if not note:
+            return jsonify({'error': 'Note not found'}), 404
+
+        if note.user_id != current_user.id:
+            return jsonify({'error': "You don't have permission to delete this note"}), 403
+
+        db.session.delete(note)
+        db.session.commit()
+        
+        return jsonify({'message': 'Note deleted successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
 @views.route('/', methods=['GET', 'POST']) 
 @login_required
 def home():
@@ -71,3 +124,6 @@ def home():
             flash('Note added successfully!', category='success')
 
     return render_template("home.html", user=current_user)
+
+
+
