@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
@@ -90,4 +89,4 @@ def create_database(app):
     with app.app_context(): 
         db.create_all()  
         print('Ensured Database Tables Exist!')
->>>>>>> 36784aa51f1a07003759980b14c172db4ad5f22d
+
