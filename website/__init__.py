@@ -43,7 +43,7 @@ def create_database(app):
     with app.app_context(): 
         db.create_all()  
         print('Ensured Database Tables Exist!')
-=======
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
