@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import os
 import json
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
@@ -128,7 +127,6 @@ def home():
 
 
 
-=======
 import os
 import json
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
@@ -202,4 +200,4 @@ def home():
             flash('Note added successfully!', category='success')
 
     return render_template("home.html", user=current_user)
->>>>>>> 36784aa51f1a07003759980b14c172db4ad5f22d
+
