@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-=======
+
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
@@ -34,5 +34,5 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
->>>>>>> 36784aa51f1a07003759980b14c172db4ad5f22d
+
     notes = db.relationship('Note')

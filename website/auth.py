@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from flask import Blueprint, render_template, request, flash,redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -68,7 +68,7 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html",user=current_user)
-=======
+
 from flask import Blueprint, render_template, request, flash,redirect, url_for
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -138,4 +138,4 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html",user=current_user)
->>>>>>> 36784aa51f1a07003759980b14c172db4ad5f22d
+
